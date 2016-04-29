@@ -147,6 +147,23 @@ def filename_for_year(year, version):
     return filename
 
 
+def get_location(shooting):
+    """
+    Old format CSV has a single Location field,
+    for example: "San Francisco, CA".
+    New format CSV has State,"City Or County",Address fields.
+    Return something like a city and state.
+    Don't really need street-level.
+    """
+    try:
+        location = shooting["Location"]
+    except KeyError:
+        city_or_county = shooting["City Or County"]
+        state = shooting["State"]
+        location = city_or_county + ", " + state
+    return location
+
+
 def format_shooting(shooting):
 
 # head -n 1 data/2013MASTER.csv
@@ -181,10 +198,10 @@ def format_shooting(shooting):
     elif dead == 0 and injured > 0:
         shot = "{0} {1} shot and injured".format(i, pi)
 
-    text = "{0}: {1} in {2}".format(shooting["Date"], shot,
-                                    shooting["Location"])
+    location = get_location(shooting)
+    text = "{0}: {1} in {2}".format(shooting["Date"], shot, location)
 
-    if shooting["Article1"] != "":
+    if "Article1" in shooting and shooting["Article1"] != "":
         text += " " + shooting["Article1"]
 
     return text
@@ -195,6 +212,11 @@ def massshooting():
     pacific = timezone("US/Pacific")
     now = datetime.datetime.now(pacific)
 #     now = eastern.localize(now)
+
+    # TEMP TEST this year
+    # now = now + relativedelta(years=1)
+    # TEMP TEST this year
+
     print("US/Pacific now:", now)
 
     last_year = str(now.year - 1)
@@ -242,7 +264,8 @@ def massshooting():
     print("Next:", next_shooting)
     print("Next:", format_shooting(next_shooting))
 
-    return format_shooting(next_shooting), next_shooting["Location"]
+    location = get_location(next_shooting)
+    return format_shooting(next_shooting), location
 
 
 if __name__ == "__main__":
@@ -259,8 +282,8 @@ if __name__ == "__main__":
         help="Directory for CSV file")
     parser.add_argument(
         '-y', '--yaml',
-        default='/Users/hugo/Dropbox/bin/data/massshootingsbot.yaml',
-        # default='E:/Users/hugovk/Dropbox/bin/data/massshootingsbot.yaml',
+        default='/Users/hugo/Dropbox/bin/data/mass_shoot_bot.yaml',
+        # default='E:/Users/hugovk/Dropbox/bin/data/mass_shoot_bot.yaml',
         help="YAML file location containing Twitter keys and secrets")
     parser.add_argument(
         '-nw', '--no-web', action='store_true',
