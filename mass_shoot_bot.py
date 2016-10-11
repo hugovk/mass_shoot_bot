@@ -15,7 +15,7 @@ from pytz import timezone
 import sys
 import twitter  # pip install twitter
 import webbrowser
-import yaml  # pip install pyaml
+import yaml  # pip install pyyaml
 
 from pprint import pprint
 
