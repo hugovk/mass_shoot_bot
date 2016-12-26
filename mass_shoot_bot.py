@@ -17,7 +17,7 @@ import twitter  # pip install twitter
 import webbrowser
 import yaml  # pip install pyyaml
 
-from pprint import pprint
+# from pprint import pprint
 
 
 # cmd.exe cannot do Unicode so encode first
@@ -154,6 +154,7 @@ def get_location(shooting):
     New format CSV has State,"City Or County",Address fields.
     Return something like a city and state.
     Don't really need street-level.
+    New new format CSV State,"City Or County",Address fields
     """
     try:
         location = shooting["Location"]
@@ -166,23 +167,12 @@ def get_location(shooting):
 
 def format_shooting(shooting):
 
-# head -n 1 data/2013MASTER.csv
-# reported,date,shooter,killed,wounded,location,article1,article2,article3,article4,article5,article6,article7,article8,article9
-# head -n 1 data/2014MASTER.csv
-# Reported By,Date,Shooter,Dead,Injured,Location,Article,Article,Article,Article,Article,Article
-# head -n 1 data/2015CURRENT.csv
-# ,Date,Shooter,Dead,Injured,Location,Article,Article,Article,Article,Article
-
-#   [{'Article': '',
-#   'Date': '12/7/2014',
-#   'Dead': '0',
-#   'Injured': '4',
-#   'Location': 'St. Joseph County, IN',
-#   'Reported By': '',
-#   'Shooter': 'Unknown'}]
-
-    dead = int(shooting["Dead"])
-    injured = int(shooting["Injured"])
+    try:
+        dead = int(shooting["Dead"])
+        injured = int(shooting["Injured"])
+    except KeyError:  # 2016 format is different
+        dead = int(shooting["# Killed"])
+        injured = int(shooting["# Injured"])
 
     if dead > 0:
         d = p.number_to_words(dead, threshold=10)
@@ -199,7 +189,11 @@ def format_shooting(shooting):
         shot = "{0} {1} shot and injured".format(i, pi)
 
     location = get_location(shooting)
-    text = "{0}: {1} in {2}".format(shooting["Date"], shot, location)
+    try:
+        date = shooting["Date"]
+    except KeyError:  # 2016 format is different
+        date = shooting["Incident Date"]
+    text = "{0}: {1} in {2}".format(date, shot, location)
 
     if "Article1" in shooting and shooting["Article1"] != "":
         text += " " + shooting["Article1"]
@@ -215,6 +209,7 @@ def massshooting():
 
     # TEMP TEST this year
     # now = now + relativedelta(years=1)
+    # now = now + relativedelta(days=5)
     # TEMP TEST this year
 
     print("US/Pacific now:", now)
@@ -236,7 +231,10 @@ def massshooting():
 #         shootings = list(reader)
         todays_shootings = []
         for rownum, row in enumerate(reader):
-            indate = parse(row['Date'])
+            try:
+                indate = parse(row['Date'])
+            except KeyError:  # 2016 format is different
+                indate = parse(row['Incident Date'])
             if indate.date() == this_day_last_year.date():
                 todays_shootings.append(row)
 
