@@ -22,13 +22,12 @@ import yaml  # pip install pyyaml
 
 # cmd.exe cannot do Unicode so encode first
 def print_it(text):
-    print(text.encode('utf-8'))
+    print(text.encode("utf-8"))
 
 
 def timestamp():
     """ Print a timestamp and the filename with path """
-    print(datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p") + " " +
-          __file__)
+    print(datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p") + " " + __file__)
 
 
 def load_yaml(filename):
@@ -45,13 +44,15 @@ def load_yaml(filename):
 
     keys = data.viewkeys() if sys.version_info.major == 2 else data.keys()
     if not keys >= {
-        'access_token', 'access_token_secret',
-        'consumer_key', 'consumer_secret'
+        "access_token",
+        "access_token_secret",
+        "consumer_key",
+        "consumer_secret",
     }:
         sys.exit("Twitter credentials missing from YAML: " + filename)
 
-    if 'last_shooting' not in data:
-        data['last_shooting'] = None
+    if "last_shooting" not in data:
+        data["last_shooting"] = None
 
     return data
 
@@ -60,7 +61,7 @@ def save_yaml(filename, data):
     """
     Save data to filename in YAML format
     """
-    with open(filename, 'w') as yaml_file:
+    with open(filename, "w") as yaml_file:
         yaml_file.write(yaml.safe_dump(data, default_flow_style=False))
 
 
@@ -73,10 +74,11 @@ def tweet_it(string, credentials, image=None, location=None):
     # https://dev.twitter.com/apps/new
     # Store credentials in YAML file
     auth = twitter.OAuth(
-        credentials['access_token'],
-        credentials['access_token_secret'],
-        credentials['consumer_key'],
-        credentials['consumer_secret'])
+        credentials["access_token"],
+        credentials["access_token_secret"],
+        credentials["consumer_key"],
+        credentials["consumer_secret"],
+    )
     t = twitter.Twitter(auth=auth)
 
     if location:
@@ -95,27 +97,32 @@ def tweet_it(string, credentials, image=None, location=None):
             # First just read images from the web or from files the regular way
             with open(image, "rb") as imagefile:
                 imagedata = imagefile.read()
-            t_up = twitter.Twitter(domain='upload.twitter.com', auth=auth)
+            t_up = twitter.Twitter(domain="upload.twitter.com", auth=auth)
             id_img = t_up.media.upload(media=imagedata)["media_id_string"]
 
             if place_id:
-                result = t.statuses.update(status=string,
-                                           media_ids=id_img,
-                                           display_coordinates=True,
-                                           place_id=place_id)
+                result = t.statuses.update(
+                    status=string,
+                    media_ids=id_img,
+                    display_coordinates=True,
+                    place_id=place_id,
+                )
             else:
-                result = t.statuses.update(status=string,
-                                           media_ids=id_img)
+                result = t.statuses.update(status=string, media_ids=id_img)
         elif place_id:
-            result = t.statuses.update(status=string,
-                                       display_coordinates=True,
-                                       place_id=place_id)
+            result = t.statuses.update(
+                status=string, display_coordinates=True, place_id=place_id
+            )
             print(place_id)
         else:
             result = t.statuses.update(status=string)
 
-        url = "http://twitter.com/" + \
-            result['user']['screen_name'] + "/status/" + result['id_str']
+        url = (
+            "http://twitter.com/"
+            + result["user"]["screen_name"]
+            + "/status/"
+            + result["id_str"]
+        )
         print("Tweeted:\n" + url)
         if not args.no_web:
             webbrowser.open(url, new=2)  # 2 = open in a new tab, if possible
@@ -127,12 +134,14 @@ def place_id_for_location(t, location):
     query = location
     contained_within = "96683cc9126741d1"  # USA
 
-    place = t.geo.search(query=query,
-                         granularity="city",
-                         contained_within=contained_within,
-                         max_results=1)
+    place = t.geo.search(
+        query=query,
+        granularity="city",
+        contained_within=contained_within,
+        max_results=1,
+    )
 
-    place_id = place["result"]["places"][0]['id']
+    place_id = place["result"]["places"][0]["id"]
     print("Location:", location)
     print("Place ID:", place_id)
 
@@ -207,7 +216,7 @@ def massshooting():
 
     pacific = timezone("US/Pacific")
     now = datetime.datetime.now(pacific)
-#     now = eastern.localize(now)
+    #     now = eastern.localize(now)
 
     # TEMP TEST this year
     # now = now + relativedelta(years=1)
@@ -230,13 +239,13 @@ def massshooting():
     with open(filename, "r") as infile:
         reader = csv.DictReader(infile)
 
-#         shootings = list(reader)
+        #         shootings = list(reader)
         todays_shootings = []
         for rownum, row in enumerate(reader):
             try:
-                indate = parse(row['Date'])
+                indate = parse(row["Date"])
             except KeyError:  # 2016 format is different
-                indate = parse(row['Incident Date'])
+                indate = parse(row["Incident Date"])
             if indate.date() == this_day_last_year.date():
                 todays_shootings.append(row)
 
@@ -273,24 +282,34 @@ if __name__ == "__main__":
     timestamp()
 
     parser = argparse.ArgumentParser(
-        description="TODO",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        description="TODO", formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
     parser.add_argument(
-        '-c', '--csv',
-        default='/Users/hugo/Dropbox/bin/data/',
+        "-c",
+        "--csv",
+        default="/Users/hugo/Dropbox/bin/data/",
         # default='E:/Users/hugovk/Dropbox/bin/data/nanogenmobot.yaml',
-        help="Directory for CSV file")
+        help="Directory for CSV file",
+    )
     parser.add_argument(
-        '-y', '--yaml',
-        default='/Users/hugo/Dropbox/bin/data/mass_shoot_bot.yaml',
+        "-y",
+        "--yaml",
+        default="/Users/hugo/Dropbox/bin/data/mass_shoot_bot.yaml",
         # default='E:/Users/hugovk/Dropbox/bin/data/mass_shoot_bot.yaml',
-        help="YAML file location containing Twitter keys and secrets")
+        help="YAML file location containing Twitter keys and secrets",
+    )
     parser.add_argument(
-        '-nw', '--no-web', action='store_true',
-        help="Don't open a web browser to show the tweeted tweet")
+        "-nw",
+        "--no-web",
+        action="store_true",
+        help="Don't open a web browser to show the tweeted tweet",
+    )
     parser.add_argument(
-        '-x', '--test', action='store_true',
-        help="Test mode: go through the motions but don't tweet anything")
+        "-x",
+        "--test",
+        action="store_true",
+        help="Test mode: go through the motions but don't tweet anything",
+    )
     args = parser.parse_args()
 
     data = load_yaml(args.yaml)
