@@ -218,7 +218,7 @@ def massshooting():
 
     pacific = timezone("US/Pacific")
     now = datetime.datetime.now(pacific)
-    #     now = eastern.localize(now)
+    # now = eastern.localize(now)
 
     # TEMP TEST this year
     # now = now + relativedelta(years=1)
@@ -241,7 +241,7 @@ def massshooting():
     with open(filename, "r") as infile:
         reader = csv.DictReader(infile)
 
-        #         shootings = list(reader)
+        # shootings = list(reader)
         todays_shootings = []
         for rownum, row in enumerate(reader):
             try:
