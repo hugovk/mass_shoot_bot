@@ -6,18 +6,20 @@ Here are the shootings on this day last year.
 https://twitter.com/mass_shoot_bot
 """
 from __future__ import print_function
+
 import argparse
 import csv
 import datetime
-from dateutil.parser import parse
-from dateutil.relativedelta import relativedelta
-import inflect
 import os.path
-from pytz import timezone
 import sys
-import twitter  # pip install twitter
 import webbrowser
+
+import inflect  # pip install inflect
+import twitter  # pip install twitter
 import yaml  # pip install pyyaml
+from dateutil.parser import parse  # pip install python-dateutil
+from dateutil.relativedelta import relativedelta
+from pytz import timezone  # pip install pytz
 
 # from pprint import pprint
 
