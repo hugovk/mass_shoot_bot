@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-TODO
+There is a mass shooting on average every day in the United States.
+Here are the shootings on this day last year.
+https://twitter.com/mass_shoot_bot
 """
 from __future__ import print_function
 import argparse
@@ -282,7 +284,9 @@ if __name__ == "__main__":
     timestamp()
 
     parser = argparse.ArgumentParser(
-        description="TODO", formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        description="There is a mass shooting on average every day in the United "
+        "States. Here are the shootings on this day last year.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
         "-c",
