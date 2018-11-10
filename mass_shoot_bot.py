@@ -189,18 +189,18 @@ def format_shooting(shooting):
         pi = p.plural("person", injured)
 
     if dead > 0 and injured > 0:
-        shot = "{} {} shot dead and {} injured".format(d, pd, i)
+        shot = f"{d} {pd} shot dead and {i} injured"
     elif dead > 0 and injured == 0:
-        shot = "{} {} shot dead".format(d, pd)
+        shot = f"{d} {pd} shot dead"
     elif dead == 0 and injured > 0:
-        shot = "{} {} shot and injured".format(i, pi)
+        shot = f"{i} {pi} shot and injured"
 
     location = get_location(shooting)
     try:
         date = shooting["Date"]
     except KeyError:  # 2016 format is different
         date = shooting["Incident Date"]
-    text = "{}: {} in {}".format(date, shot, location)
+    text = f"{date}: {shot} in {location}"
 
     if "Article1" in shooting and shooting["Article1"] != "":
         text += " " + shooting["Article1"]
