@@ -30,4 +30,4 @@ script:
  - python mass_shoot_bot.py --help
 
  # Dry run
- - python mass_shoot_bot.py --test
+ - python mass_shoot_bot.py --yaml mass_shoot_bot_example.yaml --test
