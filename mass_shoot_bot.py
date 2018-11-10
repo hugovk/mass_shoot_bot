@@ -85,7 +85,7 @@ def tweet_it(string, credentials, image=None, location=None):
     )
     t = twitter.Twitter(auth=auth)
 
-    if location:
+    if location and not args.test:
         place_id = place_id_for_location(t, location)
 
     print_it("TWEETING THIS:\n" + string)
