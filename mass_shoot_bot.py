@@ -5,8 +5,6 @@ There is a mass shooting on average every day in the United States.
 Here are the shootings on this day last year.
 https://twitter.com/mass_shoot_bot
 """
-from __future__ import print_function
-
 import argparse
 import csv
 import datetime
@@ -22,11 +20,6 @@ from dateutil.relativedelta import relativedelta
 from pytz import timezone  # pip install pytz
 
 # from pprint import pprint
-
-
-# cmd.exe cannot do Unicode so encode first
-def print_it(text):
-    print(text.encode("utf-8"))
 
 
 def timestamp():
@@ -46,8 +39,7 @@ def load_yaml(filename):
     with open(filename) as f:
         data = yaml.safe_load(f)
 
-    keys = data.viewkeys() if sys.version_info.major == 2 else data.keys()
-    if not keys >= {
+    if not data.keys() >= {
         "access_token",
         "access_token_secret",
         "consumer_key",
@@ -88,7 +80,7 @@ def tweet_it(string, credentials, image=None, location=None):
     if location and not args.test:
         place_id = place_id_for_location(t, location)
 
-    print_it("TWEETING THIS:\n" + string)
+    print("TWEETING THIS:\n" + string)
 
     if args.test:
         print("(Test mode, not actually tweeting)")
