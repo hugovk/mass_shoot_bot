@@ -28,3 +28,6 @@ script:
 
  # Simple run to check dependencies
  - python mass_shoot_bot.py --help
+
+ # Dry run
+ - python mass_shoot_bot.py --test
