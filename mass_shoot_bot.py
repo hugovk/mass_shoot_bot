@@ -290,18 +290,11 @@ if __name__ == "__main__":
         "States. Here are the shootings on this day last year.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument(
-        "-c",
-        "--csv",
-        default="/Users/hugo/Dropbox/bin/data/",
-        # default='E:/Users/hugovk/Dropbox/bin/data/nanogenmobot.yaml',
-        help="Directory for CSV file",
-    )
+    parser.add_argument("-c", "--csv", default="data/", help="Directory for CSV file")
     parser.add_argument(
         "-y",
         "--yaml",
         default="/Users/hugo/Dropbox/bin/data/mass_shoot_bot.yaml",
-        # default='E:/Users/hugovk/Dropbox/bin/data/mass_shoot_bot.yaml',
         help="YAML file location containing Twitter keys and secrets",
     )
     parser.add_argument(
