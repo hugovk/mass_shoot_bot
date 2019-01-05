@@ -37,7 +37,7 @@ def load_yaml(filename):
     wordnik_api_key: TODO_ENTER_YOURS
     """
     with open(filename) as f:
-        data = yaml.safe_load(f)
+        data = yaml.load(f)
 
     if not data.keys() >= {
         "access_token",
@@ -58,7 +58,7 @@ def save_yaml(filename, data):
     Save data to filename in YAML format
     """
     with open(filename, "w") as yaml_file:
-        yaml_file.write(yaml.safe_dump(data, default_flow_style=False))
+        yaml_file.write(yaml.dump(data, default_flow_style=False))
 
 
 def tweet_it(string, credentials, image=None, location=None):

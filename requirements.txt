@@ -1,5 +1,5 @@
 inflect
 python-dateutil
 pytz
-pyyaml
+pyyaml==3.13
 twitter
