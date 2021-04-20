@@ -37,7 +37,7 @@ def load_yaml(filename):
     wordnik_api_key: TODO_ENTER_YOURS
     """
     with open(filename) as f:
-        data = yaml.load(f)
+        data = yaml.safe_load(f)
 
     if not data.keys() >= {
         "access_token",
