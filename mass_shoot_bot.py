@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# encoding: utf-8
 """
 There is a mass shooting on average every day in the United States.
 Here are the shootings on this day last year.
@@ -232,7 +231,7 @@ def massshooting():
     if not os.path.isfile(filename):
         filename = filename_for_year(last_year, "CURRENT")
 
-    with open(filename, "r") as infile:
+    with open(filename) as infile:
         reader = csv.DictReader(infile)
 
         # shootings = list(reader)
